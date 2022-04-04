@@ -15,6 +15,12 @@ public:
     
     virtual void Move(uint16_t time) { x += xDirction * speed * time * 0.001; y += yDirection * speed * time * 0.001; };
 
+    void SetPos(double nx, double ny) override {};
+    inline double GetY() override = 0;
+    inline double GetX() override =0;
+    inline void SetWidth(uint16_t widthN) override =0;
+    //inline uint16_t GetWidth() const override {};
+
 protected:
 
     double speed;
