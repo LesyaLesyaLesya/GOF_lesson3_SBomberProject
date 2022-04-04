@@ -53,12 +53,19 @@ SBomber::SBomber(std::shared_ptr<MyTools::ILogger> logger)
     pGr->SetWidth(width - 2);
     vecStaticObj.push_back(pGr);
 
-    Tank* pTank = new Tank;
+    /*Tank* pTank = new Tank;
+    pTank->SetWidth(13);
+    pTank->SetPos(30, groundY - 1);
+    vecStaticObj.push_back(pTank);*/
+
+    TankAdaptee tank;
+    TankAdapter* pTank = new TankAdapter(tank);
     pTank->SetWidth(13);
     pTank->SetPos(30, groundY - 1);
     vecStaticObj.push_back(pTank);
 
-    pTank = new Tank;
+
+    pTank = new TankAdapter(tank);
     pTank->SetWidth(13);
     pTank->SetPos(50, groundY - 1);
     vecStaticObj.push_back(pTank);
@@ -209,6 +216,20 @@ bool SBomber::BombIterator::operator!=(BombIterator it) // проверка на лог. нера
     return !(*this == it);
 }
 
+// получаем итератор настроенный на начало массива
+SBomber::BombIterator SBomber::begin()
+{ 
+    BombIterator it(vecDynamicObj);
+    return it;
+}
+// итератор в конечном состоянии
+SBomber::BombIterator SBomber::end()
+{ 
+    BombIterator it(vecDynamicObj); 
+    it.reset();
+    return it;
+}
+
 void SBomber::CheckObjects()
 {
     logger_->WriteToLog(string(__FUNCTION__) + " was invoked");
@@ -326,10 +347,10 @@ Ground* SBomber::FindGround() const
     return nullptr;
 }
 
-vector<Bomb*> SBomber::FindAllBombs() const
+vector<Bomb*> SBomber::FindAllBombs()
 {
     vector<Bomb*> vecBombs;
-
+    /*
     for (size_t i = 0; i < vecDynamicObj.size(); i++)
     {
         Bomb* pBomb = dynamic_cast<Bomb*>(vecDynamicObj[i]);
@@ -338,7 +359,18 @@ vector<Bomb*> SBomber::FindAllBombs() const
             vecBombs.push_back(pBomb);
         }
     }
+    */
 
+    auto bombIt = this->begin();
+    while (bombIt != this->end())
+    {
+        Bomb* pBomb = dynamic_cast<Bomb*>(*bombIt);
+        if (pBomb != nullptr)
+        {
+            vecBombs.push_back(pBomb);
+        }
+        bombIt++;
+    }
     return vecBombs;
 }
 

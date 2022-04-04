@@ -26,6 +26,7 @@ public:
     void DrawFrame();
     void MoveObjects();
     void CheckObjects();
+    
 
     class BombIterator { // «Итератор» по четным числам в массиве
         std::vector<DynamicObject*>& vecDynamicObj_;
@@ -44,6 +45,14 @@ public:
         bool operator==(BombIterator it); // проверка на лог. равенство итераторов
         bool operator!=(BombIterator it); // проверка на лог. неравенство
     };
+
+    // получаем итератор настроенный на начало массива
+    BombIterator begin();
+
+    // итератор в конечном состоянии
+    BombIterator end();
+
+
 private:
 
     void CheckPlaneAndLevelGUI();
@@ -57,7 +66,7 @@ private:
     Plane * FindPlane() const;
     LevelGUI * FindLevelGUI() const;
     std::vector<DestroyableGroundObject*> FindDestoyableGroundObjects() const;
-    std::vector<Bomb*> FindAllBombs() const;
+    std::vector<Bomb*> FindAllBombs();
 
     void DropBomb();
 
@@ -70,11 +79,4 @@ private:
     uint16_t bombsNumber, deltaTime, fps;
     int16_t score;
     std::shared_ptr<MyTools::ILogger> logger_;
-};
-
-
-// получаем итератор настроенный на начало массива
-BombIterator begin() { BombIterator it(arr); return it; }
-// итератор в конечном состоянии
-BombIterator end() { BombIterator it(arr); it.reset(); return it; }
 };
